@@ -155,6 +155,7 @@ ai-security-triage/
 ├── requirements.txt
 └── README.md
 
+```
 ---
 ## 📦 Reproducibility
 

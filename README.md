@@ -154,3 +154,20 @@ ai-security-triage/
 │
 ├── requirements.txt
 └── README.md
+
+---
+## 📦 Reproducibility
+
+This project does not store generated outputs in version control.
+
+To reproduce results:
+
+```bash
+python src/triage.py
+```
+
+Outputs will be generated in:
+
+```bash
+output/results.csv
+```

@@ -1,138 +1,140 @@
-## Project Overview
+# 🔐 AI Security Triage
 
-This repository demonstrates a containerized vulnerability prioritization pipeline designed for team deployment and reproducible security analysis. 
+## Overview
 
-The system moves beyond raw CVSS scoring by incorporating business impact, asset exposure, and operational context into a unified risk score. 
+**AI Security Triage** is a container-ready, Python-based vulnerability prioritization engine designed for reproducible, team-based security analysis.
 
-In this project, I contributed to testing, deployment, and refinement of the triage pipeline, helping validate results and ensure the tool could be executed reliably in a team environment.
+Unlike traditional approaches that rely solely on CVSS scores, this system incorporates:
 
+- Business impact  
+- Asset exposure  
+- Operational context  
 
-🔐 AI Security Triage
+to produce a **unified, explainable risk score** and **decision-ready remediation priorities**.
 
-AI Security Triage is a structured, explainable Python-based vulnerability prioritization engine.
+This project simulates a real-world triage workflow used by **SOC** and **vulnerability management teams**.
 
-It ingests asset and vulnerability data, applies a transparent risk scoring model, categorizes risk types, flags escalation cases, and outputs prioritized remediation guidance.
+---
 
-This project simulates a realistic security triage workflow used by SOC and vulnerability management teams.
+## 👨‍💻 My Contribution
 
-🎯 What This Project Does
+- Tested and validated triage logic across datasets  
+- Supported deployment and execution workflows  
+- Refined scoring outputs for consistency and explainability  
+- Ensured reliability in a team-based execution environment  
 
-- Merges asset context with vulnerability findings
+---
 
-- Applies weighted, explainable risk scoring
+## 🎯 Core Capabilities
 
-- Assigns human-readable risk tiers (Critical / High / Medium / Low)
+- Merge asset context with vulnerability findings  
+- Apply weighted, explainable risk scoring  
+- Assign human-readable risk tiers (Critical / High / Medium / Low)  
+- Categorize risks (e.g., Network Exposure, Business Impact)  
+- Flag escalation scenarios with justification  
+- Generate prioritized, decision-ready outputs  
 
-- Categorizes risk type (e.g., Network Exposure, Business Impact)
+---
 
-- Flags escalation scenarios with justification
+## ⚙️ System Workflow
 
-- Produces decision-ready, sorted output
+### 1. Data Ingestion
 
-⚙️ How It Works
+- Load `assets.csv`  
+- Load `vulnerabilities.csv`  
+- Merge datasets on `asset_id`  
 
-1️⃣ Ingestion
+---
 
-- Loads assets.csv
+### 2. Risk Scoring Model
 
-- Loads vulnerabilities.csv
+The risk score is calculated as:
 
-- Merges on asset_id
-
-2️⃣ Risk Scoring Model
-
-Risk score is calculated as:
 
 (severity_cvss × exploitability)
-+ (business_criticality × data_sensitivity)
-+ exposure_modifier
 
+(business_criticality × data_sensitivity)
+exposure_modifier
 
-Where:
+**Notes:**
+- External exposure increases risk weight  
+- Final score is rounded to an integer  
+- Model is fully deterministic and explainable  
 
-- External exposure adds additional weight
+---
 
-- Output is rounded to an integer
+### 3. Risk Tier Mapping
 
-3️⃣ Risk Tier Mapping
+| Score Range | Risk Level |
+|------------|-----------|
+| ≥ 75       | Critical  |
+| ≥ 50       | High      |
+| ≥ 25       | Medium    |
+| < 25       | Low       |
 
-Score	Risk Level
-≥ 75	Critical
-≥ 50	High
-≥ 25	Medium
-< 25	Low
+---
 
-4️⃣ Risk Categorization
+### 4. Risk Categorization
 
-Rule-based tagging for explainability:
+Rule-based tagging enhances explainability:
 
-- Critical Infrastructure
+- Critical Infrastructure  
+- Network Exposure  
+- Exploitable Vulnerability  
+- High Business Impact  
+- General Risk  
 
-- Network Exposure
+---
 
-- Exploitable Vulnerability
+### 5. Escalation Logic
 
-- High Business Impact
+A vulnerability is escalated if any of the following conditions are met:
 
-- General Risk
+- Risk level is **Critical**  
+- High-risk vulnerability on an **externally exposed asset**  
+- Business criticality ≥ 8  
+- Exploitability ≥ 8  
 
-5️⃣ Escalation Logic
+**Output Fields:**
+- `escalation_flag`  
+- `escalation_reason`  
 
-A vulnerability is escalated if:
+---
 
-- Risk level is Critical
+## 📊 Output
 
-- High risk on an external asset
+Results are generated at:
 
-- Business criticality ≥ 8
-
-- Exploitability ≥ 8
-
-Output includes:
-
-- escalation_flag
-
-- escalation_reason
-
-📊 Output
-
-The engine generates:
 
 output/results.csv
 
 
-Columns include:
+### Output Includes:
 
-- run_id
+- `run_id`  
+- `generated_at`  
+- Asset context fields  
+- `risk_score`  
+- `risk_level`  
+- `risk_category`  
+- `escalation_flag`  
+- `escalation_reason`  
 
-- generated_at
+### Additional Features:
 
-- Asset context fields
+- Results sorted by highest risk first  
+- Console summary includes:
+  - Total rows processed  
+  - Distribution by risk level  
+  - Top prioritized vulnerabilities  
 
-- risk_score
+---
 
-- risk_level
+## 🚀 Quick Start
 
-- risk_category
-
-- escalation_flag
-
-- escalation_reason
-
-Results are sorted by highest risk first.
-
-Console summaries display:
-
-- Total rows scored
-
-- Findings by risk level
-
-- Top prioritized vulnerabilities
-
-🚀 Quick Start
+```bash
 pip install -r requirements.txt
 python src/triage.py
-
 📂 Project Structure
 ai-security-triage/
 │
@@ -148,47 +150,7 @@ ai-security-triage/
 ├── docs/
 │   └── walkthrough.md
 │
-├── output/  (ignored by Git)
+├── output/   # ignored by Git
 │
 ├── requirements.txt
 └── README.md
-
-🧠 Design Principles
-
-- Deterministic and explainable logic (no black-box scoring)
-
-- Modular architecture
-
-- Reproducible output
-
-- Clear separation of ingestion, scoring, and orchestration
-
-- Portfolio-ready structure
-
-🔮 Future Enhancements
-
-- Docker containerization
-
-- REST API interface
-
-- Lightweight dashboard
-
-- Extended scoring weight configuration
-
-- CI pipeline integration
-
-
-## Run with Docker (Windows)
-
-### Prerequisites
-- Docker Desktop installed and running
-
-### Run the Project
-From the root of the repository:
-
-powershell -ExecutionPolicy Bypass -File .\run_docker.ps1
-
-### Output
-Results will be written to:
-
-output/results.csv
